@@ -10,6 +10,9 @@ const step1Title = document.getElementById('step1Title');
 const step1Warning = document.getElementById('step1Warning');
 const chaseHint = document.getElementById('chaseHint');
 const congratsText = document.getElementById('congratsText');
+const startOverlay = document.getElementById('startOverlay');
+const startBtn = document.getElementById('startBtn');
+const startStatus = document.getElementById('startStatus');
 
 step1Title.textContent = defaultConfig.title_text;
 step1Warning.textContent = defaultConfig.danger_text;
@@ -24,13 +27,18 @@ const STEP4_TO_STEP5_MS = 18000;
 
 const STEP12_TOTAL_MS = STEP1_SHOW_MS + STEP1_FADE_MS + STEP2_SHOW_MS + STEP2_FADE_MS;
 
-const step12Music = new Audio('./audio/step12.mp3');
+const STEP12_AUDIO_URL = './audio/step12.mp3';
+const STEP12_VISUAL_DELAY_MS = 120;
+const DEFAULT_AUDIO_VOLUME = 1;
+
+const step12Music = new Audio(STEP12_AUDIO_URL);
 const step3Music = new Audio('./audio/step3.mp3');
 const step45Music = new Audio('./audio/step45.mp3');
 
 [step12Music, step3Music, step45Music].forEach(audio => {
   audio.preload = 'auto';
-  audio.volume = 0.6;
+  audio.volume = DEFAULT_AUDIO_VOLUME;
+  audio.load();
 });
 
 step12Music.loop = false;
@@ -38,6 +46,65 @@ step3Music.loop = true;
 step45Music.loop = true;
 
 let currentMusic = null;
+let sequenceStarted = false;
+let audioCtx = null;
+let step12Buffer = null;
+let step12BufferPromise = null;
+let activeStep12Source = null;
+
+function ensureAudioContext() {
+  if (!audioCtx) {
+    const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+    if (AudioContextClass) audioCtx = new AudioContextClass();
+  }
+  return audioCtx;
+}
+
+function preloadStep12Buffer() {
+  if (step12Buffer) return Promise.resolve(step12Buffer);
+  if (step12BufferPromise) return step12BufferPromise;
+
+  step12BufferPromise = fetch(STEP12_AUDIO_URL)
+    .then(response => {
+      if (!response.ok) {
+        throw new Error(`Không tải được step12 audio: ${response.status}`);
+      }
+      return response.arrayBuffer();
+    })
+    .then(arrayBuffer => {
+      const ctx = ensureAudioContext();
+      if (!ctx) throw new Error('Trình duyệt không hỗ trợ AudioContext');
+      return ctx.decodeAudioData(arrayBuffer.slice(0));
+    })
+    .then(buffer => {
+      step12Buffer = buffer;
+      return buffer;
+    })
+    .catch(err => {
+      step12BufferPromise = null;
+      throw err;
+    });
+
+  return step12BufferPromise;
+}
+
+preloadStep12Buffer().catch(err => {
+  console.warn('Không preload được step12 buffer, sẽ fallback sang <audio>:', err);
+});
+
+function stopStep12Source() {
+  if (!activeStep12Source) return;
+
+  try {
+    activeStep12Source.stop(0);
+  } catch (_) {}
+
+  try {
+    activeStep12Source.disconnect();
+  } catch (_) {}
+
+  activeStep12Source = null;
+}
 
 function stopAudio(audio, reset = true) {
   audio.pause();
@@ -45,6 +112,8 @@ function stopAudio(audio, reset = true) {
 }
 
 function stopAllMusic(reset = true) {
+  stopStep12Source();
+
   [step12Music, step3Music, step45Music].forEach(audio => {
     audio.pause();
     if (reset) audio.currentTime = 0;
@@ -52,6 +121,8 @@ function stopAllMusic(reset = true) {
 }
 
 function playMusic(audio, { loop = false, restart = true } = {}) {
+  stopStep12Source();
+
   [step12Music, step3Music, step45Music].forEach(other => {
     if (other !== audio) {
       other.pause();
@@ -60,6 +131,7 @@ function playMusic(audio, { loop = false, restart = true } = {}) {
   });
 
   audio.loop = loop;
+  audio.volume = DEFAULT_AUDIO_VOLUME;
   if (restart) audio.currentTime = 0;
 
   currentMusic = audio;
@@ -72,8 +144,51 @@ function playMusic(audio, { loop = false, restart = true } = {}) {
   }
 }
 
-document.addEventListener('pointerdown', () => {
+async function playStep12Opening() {
+  stopAllMusic(true);
+
+  try {
+    const ctx = ensureAudioContext();
+    if (!ctx) throw new Error('Không tạo được AudioContext');
+
+    if (ctx.state === 'suspended') {
+      await ctx.resume();
+    }
+
+    const buffer = step12Buffer || await preloadStep12Buffer();
+    const source = ctx.createBufferSource();
+
+    source.buffer = buffer;
+    source.connect(ctx.destination);
+    source.start(0);
+
+    activeStep12Source = source;
+    currentMusic = null;
+
+    source.onended = () => {
+      if (activeStep12Source === source) {
+        activeStep12Source = null;
+      }
+    };
+
+    return true;
+  } catch (err) {
+    console.warn('Web Audio thất bại, fallback sang <audio> cho step12:', err);
+    playMusic(step12Music, { loop: false, restart: true });
+    return false;
+  }
+}
+
+document.addEventListener('pointerdown', async () => {
+  const ctx = ensureAudioContext();
+  if (ctx && ctx.state === 'suspended') {
+    try {
+      await ctx.resume();
+    } catch (_) {}
+  }
+
   if (currentMusic && currentMusic.paused) {
+    currentMusic.volume = DEFAULT_AUDIO_VOLUME;
     currentMusic.play().catch(() => {});
   }
 }, { passive: true });
@@ -430,7 +545,6 @@ function showRestartButton() {
 }
 
 function startSequence() {
-  playMusic(step12Music, { loop: false, restart: true });
   createFlames();
 
   setTimeout(() => {
@@ -467,4 +581,38 @@ function startSequence() {
   }, STEP1_SHOW_MS);
 }
 
-startSequence();
+async function bootSequence() {
+  if (sequenceStarted) return;
+  sequenceStarted = true;
+
+  if (startBtn) {
+    startBtn.disabled = true;
+    startBtn.textContent = 'Đang khởi động...';
+  }
+
+  if (startStatus) {
+    startStatus.textContent = 'Đợi một nhịp rất ngắn để âm thanh sẵn sàng nhé.';
+  }
+
+  try {
+    await playStep12Opening();
+  } catch (err) {
+    console.error('Không thể khởi động audio mở màn:', err);
+  }
+
+  app.classList.add('hide-cursor');
+
+  startOverlay.style.transition = 'opacity 0.35s ease';
+  startOverlay.style.opacity = '0';
+  startOverlay.style.pointerEvents = 'none';
+
+  setTimeout(() => {
+    startOverlay.remove();
+    startSequence();
+  }, STEP12_VISUAL_DELAY_MS);
+}
+
+startBtn.addEventListener('click', (e) => {
+  e.preventDefault();
+  bootSequence();
+}, { once: true });

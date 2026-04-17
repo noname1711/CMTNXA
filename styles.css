@@ -275,7 +275,6 @@ body {
   100% { transform: translateX(-50%) translateY(-280px) scale(0.2); opacity: 0; }
 }
 
-
 /* ===== STEP 5 EXTRA CELEBRATION ===== */
 
 .celebrate-text {
@@ -372,5 +371,96 @@ body {
   100% {
     transform: translateY(110vh) rotate(720deg);
     opacity: 0.2;
+  }
+}
+
+/* ===== START OVERLAY ===== */
+
+.start-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: radial-gradient(circle at center, rgba(65,0,0,0.92) 0%, rgba(20,0,0,0.97) 55%, rgba(0,0,0,0.99) 100%);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.start-card {
+  width: min(92vw, 430px);
+  padding: 28px 24px;
+  border-radius: 24px;
+  text-align: center;
+  color: #fff;
+  background: linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.03));
+  border: 1px solid rgba(255,255,255,0.12);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.35);
+}
+
+.start-kicker {
+  font-family: 'Baloo 2', cursive;
+  font-size: 14px;
+  font-weight: 700;
+  color: #ffd86b;
+  margin-bottom: 8px;
+  letter-spacing: 0.5px;
+}
+
+.start-title {
+  font-family: 'Baloo 2', cursive;
+  font-size: clamp(28px, 5vw, 34px);
+  font-weight: 800;
+  margin: 0 0 10px;
+  line-height: 1.1;
+}
+
+.start-desc {
+  font-family: 'Baloo 2', cursive;
+  font-size: 15px;
+  line-height: 1.6;
+  opacity: 0.92;
+  margin: 0 0 20px;
+}
+
+.start-btn {
+  border: none;
+  outline: none;
+  padding: 14px 28px;
+  border-radius: 999px;
+  font-family: 'Baloo 2', cursive;
+  font-size: 18px;
+  font-weight: 800;
+  cursor: pointer;
+  color: #fff;
+  background: linear-gradient(135deg, #ff6a00, #ff2d55);
+  box-shadow: 0 12px 30px rgba(255, 80, 40, 0.35);
+  transition: transform 0.15s ease, opacity 0.2s ease, box-shadow 0.2s ease;
+}
+
+.start-btn:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 16px 34px rgba(255, 80, 40, 0.42);
+}
+
+.start-btn:active {
+  transform: scale(0.98);
+}
+
+.start-btn:disabled {
+  cursor: wait;
+  opacity: 0.85;
+}
+
+.start-btn:focus-visible {
+  outline: 3px solid rgba(255, 216, 107, 0.85);
+  outline-offset: 3px;
+}
+
+@media (max-width: 640px) {
+  .start-card {
+    padding: 24px 18px;
   }
 }
