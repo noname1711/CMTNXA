@@ -1,0 +1,299 @@
+<!doctype html>
+<html lang="vi" class="h-full">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tặng cậu nè</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;700;800&family=Patrick+Hand&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body class="h-full">
+  <div id="app" class="sky-red sky-transition hide-cursor">
+    <!-- STEP 1 -->
+    <div id="step1" class="absolute inset-0 flex items-center justify-center z-10">
+      <div class="danger-text text-5xl md:text-7xl font-extrabold text-red-500 text-center px-4 select-none">
+        ⚠️ <span id="step1Title">NGUY HIỂM</span> ⚠️
+        <div class="text-2xl md:text-3xl mt-4 text-yellow-400" style="font-family:'Baloo 2',cursive; font-weight:700; letter-spacing:1px;">
+          <span id="step1Warning">Thế giới đang lâm nguy rồi!</span>
+        </div>
+      </div>
+      <div class="fire-container" id="fireContainer"></div>
+    </div>
+
+    <!-- STEP 2 -->
+    <div id="step2" class="absolute inset-0 flex items-center justify-center z-20" style="display:none;">
+      <div id="monsterIntro" class="relative">
+        <svg id="monsterSvgIntro" class="monster-idle" width="260" height="300" viewBox="0 0 260 300">
+          <ellipse cx="130" cy="190" rx="70" ry="85" fill="#4CAF50" />
+          <ellipse cx="130" cy="210" rx="45" ry="55" fill="#A5D6A7" />
+          <ellipse cx="130" cy="100" rx="55" ry="50" fill="#4CAF50" />
+          <ellipse cx="130" cy="125" rx="28" ry="20" fill="#8B0000" />
+          <ellipse cx="130" cy="123" rx="22" ry="14" fill="#4a0000" />
+          <path d="M118 138 Q130 148 142 138" fill="#FF6B6B" opacity="0.6" />
+          <circle cx="110" cy="88" r="14" fill="white" />
+          <circle cx="150" cy="88" r="14" fill="white" />
+          <circle cx="112" cy="90" r="7" fill="#222" />
+          <circle cx="152" cy="90" r="7" fill="#222" />
+          <circle cx="115" cy="86" r="3" fill="white" />
+          <circle cx="155" cy="86" r="3" fill="white" />
+          <line x1="105" y1="75" x2="100" y2="70" stroke="#2E7D32" stroke-width="2" stroke-linecap="round" />
+          <line x1="155" y1="75" x2="160" y2="70" stroke="#2E7D32" stroke-width="2" stroke-linecap="round" />
+          <circle cx="122" cy="108" r="3" fill="#2E7D32" />
+          <circle cx="138" cy="108" r="3" fill="#2E7D32" />
+          <polygon points="105,55 115,25 125,55" fill="#66BB6A" />
+          <polygon points="120,48 130,15 140,48" fill="#66BB6A" />
+          <polygon points="135,55 145,25 155,55" fill="#66BB6A" />
+          <ellipse cx="68" cy="180" rx="16" ry="10" fill="#4CAF50" transform="rotate(-20 68 180)" />
+          <ellipse cx="192" cy="180" rx="16" ry="10" fill="#4CAF50" transform="rotate(20 192 180)" />
+          <ellipse cx="100" cy="270" rx="20" ry="14" fill="#4CAF50" />
+          <ellipse cx="160" cy="270" rx="20" ry="14" fill="#4CAF50" />
+          <path d="M60 230 Q30 240 25 215 Q20 195 40 200" fill="#4CAF50" stroke="#43A047" stroke-width="1" />
+          <line x1="118" y1="125" x2="118" y2="135" stroke="white" stroke-width="1.5" />
+          <line x1="125" y1="123" x2="125" y2="137" stroke="white" stroke-width="1.5" />
+          <line x1="135" y1="123" x2="135" y2="137" stroke="white" stroke-width="1.5" />
+          <line x1="142" y1="125" x2="142" y2="135" stroke="white" stroke-width="1.5" />
+        </svg>
+        <div id="fireBreathContainer" class="absolute" style="top:80px; right:-180px; width:200px; height:80px;"></div>
+      </div>
+      <div id="monsterName" class="absolute bottom-16 text-3xl font-bold text-yellow-300 select-none" style="font-family:'Baloo 2',cursive; text-shadow: 0 0 15px rgba(255,200,0,0.6);">
+        Đây là quái zật nhó Khum được chê tớ design đâu đei =))
+      </div>
+    </div>
+
+    <!-- STEP 3 -->
+    <div id="step3" class="absolute inset-0 z-20" style="display:none;">
+      <div class="ground h-24 md:h-32" style="background: linear-gradient(0deg, #3e2723 0%, #5d4037 60%, #6d4c41 100%);"></div>
+      <div id="caveChasestep" class="cave absolute" style="left: 50%; bottom: 80px; transform: translateX(-50%); width: 320px; height: 280px;">
+        <svg width="320" height="280" viewBox="0 0 320 280">
+          <defs>
+            <radialGradient id="caveShade1" cx="50%" cy="30%">
+              <stop offset="0%" style="stop-color:#1a1a1a;stop-opacity:0.5" />
+              <stop offset="100%" style="stop-color:#000000;stop-opacity:1" />
+            </radialGradient>
+          </defs>
+          <path d="M 40 240 L 20 200 L 15 150 L 25 100 L 40 70 Q 80 40 160 35 Q 240 40 280 70 L 295 100 L 305 150 L 300 200 L 280 240 Z" fill="#3d2817" stroke="#2a1810" stroke-width="3" />
+          <path d="M 40 240 Q 35 200 30 160 L 45 140 Q 50 180 55 240 Z" fill="#5d4a37" stroke="#3d2817" stroke-width="1" />
+          <path d="M 280 240 Q 285 200 290 160 L 275 140 Q 270 180 265 240 Z" fill="#5d4a37" stroke="#3d2817" stroke-width="1" />
+          <ellipse cx="160" cy="200" rx="110" ry="95" fill="#0a0a0a" />
+          <ellipse cx="160" cy="195" rx="100" ry="85" fill="#0d0d0d" opacity="0.8" />
+          <ellipse cx="160" cy="185" rx="85" ry="70" fill="#000000" opacity="0.9" />
+          <ellipse cx="120" cy="170" rx="50" ry="65" fill="#000000" opacity="0.95" />
+          <ellipse cx="200" cy="170" rx="50" ry="65" fill="#000000" opacity="0.95" />
+          <ellipse cx="160" cy="210" rx="70" ry="50" fill="#0a0a0a" />
+          <ellipse cx="70" cy="190" rx="35" ry="40" fill="#6d5a47" stroke="#4a3728" stroke-width="2" />
+          <ellipse cx="250" cy="190" rx="35" ry="40" fill="#6d5a47" stroke="#4a3728" stroke-width="2" />
+          <ellipse cx="90" cy="220" rx="28" ry="25" fill="#7d6a57" />
+          <ellipse cx="230" cy="220" rx="28" ry="25" fill="#7d6a57" />
+          <circle cx="110" cy="240" r="15" fill="#8d7a67" />
+          <circle cx="210" cy="240" r="15" fill="#8d7a67" />
+          <circle cx="160" cy="250" r="12" fill="#8d7a67" />
+          <line x1="50" y1="160" x2="110" y2="175" stroke="#1a1a1a" stroke-width="2" opacity="0.7" />
+          <line x1="270" y1="160" x2="210" y2="175" stroke="#1a1a1a" stroke-width="2" opacity="0.7" />
+          <line x1="60" y1="185" x2="120" y2="190" stroke="#0d0d0d" stroke-width="1.5" opacity="0.6" />
+          <line x1="260" y1="185" x2="200" y2="190" stroke="#0d0d0d" stroke-width="1.5" opacity="0.6" />
+          <path d="M 80 140 Q 85 180 80 220" stroke="#2a1810" stroke-width="1.5" opacity="0.5" fill="none" />
+          <path d="M 240 140 Q 235 180 240 220" stroke="#2a1810" stroke-width="1.5" opacity="0.5" fill="none" />
+          <circle cx="160" cy="200" r="120" fill="url(#caveShade1)" opacity="0.4" />
+        </svg>
+      </div>
+      <div id="chaseHint" class="absolute top-8 left-1/2 transform -translate-x-1/2 text-xl md:text-2xl font-bold text-yellow-300 select-none animate-pulse" style="font-family:'Baloo 2',cursive; text-shadow: 0 0 15px rgba(255,200,0,0.6);">
+        👆 Siu nhân Xuân Anh hãy cầm gươm đánh đuổi yêu ma!
+      </div>
+      <div id="monsterChase" class="absolute monster-idle" style="bottom: 100px; left: 50px;">
+        <svg width="80" height="90" viewBox="0 0 260 300">
+          <ellipse cx="130" cy="190" rx="70" ry="85" fill="#4CAF50" />
+          <ellipse cx="130" cy="210" rx="45" ry="55" fill="#A5D6A7" />
+          <ellipse cx="130" cy="100" rx="55" ry="50" fill="#4CAF50" />
+          <circle cx="110" cy="88" r="14" fill="white" />
+          <circle cx="150" cy="88" r="14" fill="white" />
+          <circle cx="112" cy="90" r="7" fill="#222" />
+          <circle cx="152" cy="90" r="7" fill="#222" />
+          <circle cx="115" cy="86" r="3" fill="white" />
+          <circle cx="155" cy="86" r="3" fill="white" />
+          <path d="M110 120 Q130 110 150 120" stroke="#2E7D32" stroke-width="3" fill="none" />
+          <polygon points="105,55 115,30 125,55" fill="#66BB6A" />
+          <polygon points="120,48 130,20 140,48" fill="#66BB6A" />
+          <polygon points="135,55 145,30 155,55" fill="#66BB6A" />
+          <ellipse cx="68" cy="180" rx="16" ry="10" fill="#4CAF50" transform="rotate(-20 68 180)" />
+          <ellipse cx="192" cy="180" rx="16" ry="10" fill="#4CAF50" transform="rotate(20 192 180)" />
+          <ellipse cx="100" cy="270" rx="20" ry="14" fill="#4CAF50" />
+          <ellipse cx="160" cy="270" rx="20" ry="14" fill="#4CAF50" />
+          <path d="M60 230 Q30 240 25 215 Q20 195 40 200" fill="#4CAF50" />
+        </svg>
+      </div>
+    </div>
+
+    <!-- STEP 4 -->
+    <div id="step4" class="absolute inset-0 z-20" style="display:none;">
+      <div class="ground h-24 md:h-32" style="background: linear-gradient(0deg, #2e7d32 0%, #4caf50 60%, #66bb6a 100%);"></div>
+      <div id="cave" class="cave absolute" style="left: 50%; bottom: 80px; transform: translateX(-50%); width: 320px; height: 280px;">
+        <svg width="320" height="280" viewBox="0 0 320 280">
+          <defs>
+            <radialGradient id="caveShade2" cx="50%" cy="30%">
+              <stop offset="0%" style="stop-color:#1a1a1a;stop-opacity:0.5" />
+              <stop offset="100%" style="stop-color:#000000;stop-opacity:1" />
+            </radialGradient>
+          </defs>
+          <path d="M 40 240 L 20 200 L 15 150 L 25 100 L 40 70 Q 80 40 160 35 Q 240 40 280 70 L 295 100 L 305 150 L 300 200 L 280 240 Z" fill="#3d2817" stroke="#2a1810" stroke-width="3" />
+          <path d="M 40 240 Q 35 200 30 160 L 45 140 Q 50 180 55 240 Z" fill="#5d4a37" stroke="#3d2817" stroke-width="1" />
+          <path d="M 280 240 Q 285 200 290 160 L 275 140 Q 270 180 265 240 Z" fill="#5d4a37" stroke="#3d2817" stroke-width="1" />
+          <ellipse cx="160" cy="200" rx="110" ry="95" fill="#0a0a0a" />
+          <ellipse cx="160" cy="195" rx="100" ry="85" fill="#0d0d0d" opacity="0.8" />
+          <ellipse cx="160" cy="185" rx="85" ry="70" fill="#000000" opacity="0.9" />
+          <ellipse cx="120" cy="170" rx="50" ry="65" fill="#000000" opacity="0.95" />
+          <ellipse cx="200" cy="170" rx="50" ry="65" fill="#000000" opacity="0.95" />
+          <ellipse cx="160" cy="210" rx="70" ry="50" fill="#0a0a0a" />
+          <ellipse cx="70" cy="190" rx="35" ry="40" fill="#6d5a47" stroke="#4a3728" stroke-width="2" />
+          <ellipse cx="250" cy="190" rx="35" ry="40" fill="#6d5a47" stroke="#4a3728" stroke-width="2" />
+          <ellipse cx="90" cy="220" rx="28" ry="25" fill="#7d6a57" />
+          <ellipse cx="230" cy="220" rx="28" ry="25" fill="#7d6a57" />
+          <circle cx="110" cy="240" r="15" fill="#8d7a67" />
+          <circle cx="210" cy="240" r="15" fill="#8d7a67" />
+          <circle cx="160" cy="250" r="12" fill="#8d7a67" />
+          <line x1="50" y1="160" x2="110" y2="175" stroke="#1a1a1a" stroke-width="2" opacity="0.7" />
+          <line x1="270" y1="160" x2="210" y2="175" stroke="#1a1a1a" stroke-width="2" opacity="0.7" />
+          <line x1="60" y1="185" x2="120" y2="190" stroke="#0d0d0d" stroke-width="1.5" opacity="0.6" />
+          <line x1="260" y1="185" x2="200" y2="190" stroke="#0d0d0d" stroke-width="1.5" opacity="0.6" />
+          <path d="M 80 140 Q 85 180 80 220" stroke="#2a1810" stroke-width="1.5" opacity="0.5" fill="none" />
+          <path d="M 240 140 Q 235 180 240 220" stroke="#2a1810" stroke-width="1.5" opacity="0.5" fill="none" />
+          <circle cx="160" cy="200" r="120" fill="url(#caveShade2)" opacity="0.4" />
+        </svg>
+      </div>
+
+      <div id="clouds">
+        <div class="cloud" style="top:10%;left:10%;width:120px;height:40px;">
+          <div style="position:absolute;top:-20px;left:20px;width:50px;height:50px;background:white;border-radius:50%;"></div>
+          <div style="position:absolute;top:-30px;left:45px;width:60px;height:60px;background:white;border-radius:50%;"></div>
+          <div style="position:absolute;top:-15px;left:75px;width:40px;height:40px;background:white;border-radius:50%;"></div>
+        </div>
+        <div class="cloud" style="top:18%;right:15%;width:100px;height:35px;">
+          <div style="position:absolute;top:-18px;left:15px;width:45px;height:45px;background:white;border-radius:50%;"></div>
+          <div style="position:absolute;top:-25px;left:40px;width:55px;height:55px;background:white;border-radius:50%;"></div>
+        </div>
+        <div class="cloud" style="top:8%;left:50%;width:90px;height:30px;">
+          <div style="position:absolute;top:-15px;left:10px;width:40px;height:40px;background:white;border-radius:50%;"></div>
+          <div style="position:absolute;top:-22px;left:35px;width:50px;height:50px;background:white;border-radius:50%;"></div>
+        </div>
+      </div>
+
+      <div id="scrollTextContainer" class="absolute top-1/2 left-0 right-0" style="transform:translateY(-50%);">
+        <div id="scrollText" class="scroll-text text-3xl md:text-4xl font-bold text-white" style="text-shadow: 0 2px 15px rgba(0,0,0,0.3);">
+          Cảm ơn siu nhân Xuân Anh đã bảo vệ thế giới, người đâu thưởng hoaaaa✨
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 5 -->
+    <div id="step5" class="absolute inset-0 z-20" style="display:none;">
+      <div class="ground h-24 md:h-32" style="background: linear-gradient(0deg, #2e7d32 0%, #4caf50 60%, #66bb6a 100%);"></div>
+      <div id="mainCave" class="cave absolute" style="left: 50%; bottom: 80px; transform: translateX(-50%); width: 320px; height: 280px;">
+        <svg width="320" height="280" viewBox="0 0 320 280">
+          <defs>
+            <radialGradient id="caveShade3" cx="50%" cy="30%">
+              <stop offset="0%" style="stop-color:#1a1a1a;stop-opacity:0.5" />
+              <stop offset="100%" style="stop-color:#000000;stop-opacity:1" />
+            </radialGradient>
+          </defs>
+          <path d="M 40 240 L 20 200 L 15 150 L 25 100 L 40 70 Q 80 40 160 35 Q 240 40 280 70 L 295 100 L 305 150 L 300 200 L 280 240 Z" fill="#3d2817" stroke="#2a1810" stroke-width="3" />
+          <path d="M 40 240 Q 35 200 30 160 L 45 140 Q 50 180 55 240 Z" fill="#5d4a37" stroke="#3d2817" stroke-width="1" />
+          <path d="M 280 240 Q 285 200 290 160 L 275 140 Q 270 180 265 240 Z" fill="#5d4a37" stroke="#3d2817" stroke-width="1" />
+          <ellipse cx="160" cy="200" rx="110" ry="95" fill="#0a0a0a" />
+          <ellipse cx="160" cy="195" rx="100" ry="85" fill="#0d0d0d" opacity="0.8" />
+          <ellipse cx="160" cy="185" rx="85" ry="70" fill="#000000" opacity="0.9" />
+          <ellipse cx="120" cy="170" rx="50" ry="65" fill="#000000" opacity="0.95" />
+          <ellipse cx="200" cy="170" rx="50" ry="65" fill="#000000" opacity="0.95" />
+          <ellipse cx="160" cy="210" rx="70" ry="50" fill="#0a0a0a" />
+          <ellipse cx="70" cy="190" rx="35" ry="40" fill="#6d5a47" stroke="#4a3728" stroke-width="2" />
+          <ellipse cx="250" cy="190" rx="35" ry="40" fill="#6d5a47" stroke="#4a3728" stroke-width="2" />
+          <ellipse cx="90" cy="220" rx="28" ry="25" fill="#7d6a57" />
+          <ellipse cx="230" cy="220" rx="28" ry="25" fill="#7d6a57" />
+          <circle cx="110" cy="240" r="15" fill="#8d7a67" />
+          <circle cx="210" cy="240" r="15" fill="#8d7a67" />
+          <circle cx="160" cy="250" r="12" fill="#8d7a67" />
+          <line x1="50" y1="160" x2="110" y2="175" stroke="#1a1a1a" stroke-width="2" opacity="0.7" />
+          <line x1="270" y1="160" x2="210" y2="175" stroke="#1a1a1a" stroke-width="2" opacity="0.7" />
+          <line x1="60" y1="185" x2="120" y2="190" stroke="#0d0d0d" stroke-width="1.5" opacity="0.6" />
+          <line x1="260" y1="185" x2="200" y2="190" stroke="#0d0d0d" stroke-width="1.5" opacity="0.6" />
+          <path d="M 80 140 Q 85 180 80 220" stroke="#2a1810" stroke-width="1.5" opacity="0.5" fill="none" />
+          <path d="M 240 140 Q 235 180 240 220" stroke="#2a1810" stroke-width="1.5" opacity="0.5" fill="none" />
+          <circle cx="160" cy="200" r="120" fill="url(#caveShade3)" opacity="0.4" />
+        </svg>
+      </div>
+
+      <div id="clouds5">
+        <div class="cloud visible" style="top:10%;left:10%;width:120px;height:40px;">
+          <div style="position:absolute;top:-20px;left:20px;width:50px;height:50px;background:white;border-radius:50%;"></div>
+          <div style="position:absolute;top:-30px;left:45px;width:60px;height:60px;background:white;border-radius:50%;"></div>
+          <div style="position:absolute;top:-15px;left:75px;width:40px;height:40px;background:white;border-radius:50%;"></div>
+        </div>
+        <div class="cloud visible" style="top:18%;right:15%;width:100px;height:35px;">
+          <div style="position:absolute;top:-18px;left:15px;width:45px;height:45px;background:white;border-radius:50%;"></div>
+          <div style="position:absolute;top:-25px;left:40px;width:55px;height:55px;background:white;border-radius:50%;"></div>
+        </div>
+        <div class="cloud visible" style="top:8%;left:50%;width:90px;height:30px;">
+          <div style="position:absolute;top:-15px;left:10px;width:40px;height:40px;background:white;border-radius:50%;"></div>
+          <div style="position:absolute;top:-22px;left:35px;width:50px;height:50px;background:white;border-radius:50%;"></div>
+        </div>
+      </div>
+
+      <div id="monsterFinal" class="absolute" style="left: 50%; bottom: 120px; transform: translateX(-50%); opacity:0;">
+        <svg width="200" height="280" viewBox="0 0 300 380">
+          <ellipse cx="150" cy="240" rx="70" ry="85" fill="#4CAF50" />
+          <ellipse cx="150" cy="260" rx="45" ry="55" fill="#A5D6A7" />
+          <ellipse cx="150" cy="150" rx="55" ry="50" fill="#4CAF50" />
+          <circle cx="130" cy="138" r="14" fill="white" />
+          <circle cx="170" cy="138" r="14" fill="white" />
+          <circle cx="132" cy="140" r="7" fill="#222" />
+          <circle cx="172" cy="140" r="7" fill="#222" />
+          <circle cx="135" cy="136" r="3" fill="white" />
+          <circle cx="175" cy="136" r="3" fill="white" />
+          <path d="M128 165 Q150 185 172 165" stroke="#2E7D32" stroke-width="3" fill="none" stroke-linecap="round" />
+          <ellipse cx="115" cy="160" rx="10" ry="6" fill="#F48FB1" opacity="0.6" />
+          <ellipse cx="185" cy="160" rx="10" ry="6" fill="#F48FB1" opacity="0.6" />
+          <polygon points="125,105 135,80 145,105" fill="#66BB6A" />
+          <polygon points="140,98 150,70 160,98" fill="#66BB6A" />
+          <polygon points="155,105 165,80 175,105" fill="#66BB6A" />
+          <ellipse cx="85" cy="220" rx="16" ry="10" fill="#4CAF50" transform="rotate(-40 85 220)" />
+          <ellipse cx="215" cy="220" rx="16" ry="10" fill="#4CAF50" transform="rotate(40 215 220)" />
+          <ellipse cx="120" cy="320" rx="20" ry="14" fill="#4CAF50" />
+          <ellipse cx="180" cy="320" rx="20" ry="14" fill="#4CAF50" />
+          <path d="M80 280 Q50 290 45 265 Q40 245 60 250" fill="#4CAF50" />
+          <g transform="translate(40, 160) rotate(-15)">
+            <line x1="30" y1="60" x2="25" y2="20" stroke="#2E7D32" stroke-width="3" />
+            <line x1="30" y1="60" x2="35" y2="15" stroke="#2E7D32" stroke-width="3" />
+            <line x1="30" y1="60" x2="15" y2="22" stroke="#2E7D32" stroke-width="3" />
+            <line x1="30" y1="60" x2="42" y2="18" stroke="#2E7D32" stroke-width="3" />
+            <line x1="30" y1="60" x2="30" y2="10" stroke="#2E7D32" stroke-width="3" />
+            <path d="M10 55 Q30 75 50 55 L45 35 Q30 48 15 35 Z" fill="#81D4FA" opacity="0.7" />
+            <circle cx="15" cy="20" r="8" fill="#66BB6A" /><circle cx="15" cy="20" r="4" fill="#A5D6A7" />
+            <circle cx="35" cy="12" r="9" fill="#4DD0E1" /><circle cx="35" cy="12" r="4.5" fill="#B2EBF2" />
+            <circle cx="25" cy="8" r="8" fill="white" /><circle cx="25" cy="8" r="4" fill="#E0F7FA" />
+            <circle cx="42" cy="16" r="7" fill="#81C784" /><circle cx="42" cy="16" r="3.5" fill="#C8E6C9" />
+            <circle cx="10" cy="30" r="6" fill="white" /><circle cx="10" cy="30" r="3" fill="#E8F5E9" />
+            <circle cx="48" cy="28" r="7" fill="#80DEEA" /><circle cx="48" cy="28" r="3.5" fill="#E0F7FA" />
+            <ellipse cx="8" cy="42" rx="6" ry="3" fill="#4CAF50" transform="rotate(-30 8 42)" />
+            <ellipse cx="52" cy="40" rx="6" ry="3" fill="#4CAF50" transform="rotate(30 52 40)" />
+          </g>
+        </svg>
+      </div>
+
+      <div id="congratsMsg" class="absolute top-1/4 left-0 right-0 text-center px-6" style="display:none;">
+        <div class="congrats-text text-2xl md:text-3xl font-bold leading-relaxed" style="font-family:'Baloo 2',cursive; color: #2E7D32; text-shadow: 0 2px 10px rgba(0,0,0,0.1);" id="congratsText">
+          🎓 Chúc mừng cậu bảo vệ thành công đồ án tốt nghiệp nhé, Xuân Anh của tớ là giỏi nhất :3 🎓
+        </div>
+        <div class="congrats-text text-5xl mt-4" style="animation-delay: 0.5s;">💐🎉✨</div>
+      </div>
+
+      <div id="flowerRain" class="absolute inset-0 pointer-events-none overflow-hidden"></div>
+      <div id="sparkles" class="absolute inset-0 pointer-events-none overflow-hidden"></div>
+
+      <button id="restartBtn" class="absolute bottom-6 right-6 px-4 py-2 rounded-full font-bold text-sm md:text-base transition-all hover:scale-110 active:scale-95 opacity-0 pointer-events-none z-50" style="font-family:'Baloo 2',cursive; background:linear-gradient(135deg,#FFD700,#FFA500); color:#2E7D32; box-shadow:0 4px 15px rgba(0,0,0,0.2); border:none; cursor:pointer;">
+        Cậu muống chơi lại khum :v
+      </button>
+    </div>
+  </div>
+
+  <script src="./script.js"></script>
+</body>
+</html>
