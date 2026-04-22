@@ -1,7 +1,7 @@
 const defaultConfig = {
   title_text: 'NGUY HIỂM',
   danger_text: 'Thế giới đang lâm nguy rồi!',
-  chase_hint: '👆 Siu nhân Xuân Anh hãy cầm gươm đánh đuổi yêu ma!',
+  chase_hint: '👆 Siu nhân Xuân Anh hãy cầm gươm đánh đuổi yêu quái ĐATN!',
   congrats_message: 'Chúc mừng cậu bảo vệ thành công đồ án tốt nghiệp nhé, Xuân Anh của tớ là giỏi nhất :3'
 };
 
