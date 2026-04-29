@@ -6,6 +6,51 @@ const defaultConfig = {
 };
 
 const app = document.getElementById('app');
+
+function clampNumber(value, min, max) {
+  return Math.min(Math.max(value, min), max);
+}
+
+function setViewportUnits() {
+  const viewportHeight = window.innerHeight || document.documentElement.clientHeight || 0;
+  document.documentElement.style.setProperty('--vh', `${viewportHeight * 0.01}px`);
+}
+
+function getSceneRect() {
+  const rect = app.getBoundingClientRect();
+  return {
+    width: rect.width || window.innerWidth || 390,
+    height: rect.height || window.innerHeight || 700
+  };
+}
+
+function getSceneScale() {
+  const { width, height } = getSceneRect();
+  return clampNumber(Math.min(width / 390, height / 720), 0.55, 1.15);
+}
+
+let resizeTimer = null;
+setViewportUnits();
+window.addEventListener('resize', () => {
+  clearTimeout(resizeTimer);
+  resizeTimer = setTimeout(() => {
+    setViewportUnits();
+
+    const step3 = document.getElementById('step3');
+    if (step3 && step3.style.display !== 'none' && !chaseComplete) {
+      const { width } = getSceneRect();
+      monsterX = clampNumber(monsterX, 16, Math.max(16, width - 80));
+      updateChaseSpeed();
+      const monster = document.getElementById('monsterChase');
+      if (monster) monster.style.left = `${monsterX}px`;
+    }
+  }, 120);
+}, { passive: true });
+
+window.addEventListener('orientationchange', () => {
+  setTimeout(setViewportUnits, 250);
+}, { passive: true });
+
 const step1Title = document.getElementById('step1Title');
 const step1Warning = document.getElementById('step1Warning');
 const chaseHint = document.getElementById('chaseHint');
@@ -199,17 +244,36 @@ let fireBreathInterval;
 let monsterX = 50;
 let chaseComplete = false;
 
+const CHASE_DURATION_SECONDS = 11;
+const CHASE_MAX_DT_SECONDS = 0.04;
+const CHASE_MIN_STEP_PX = 0.45;
+let chaseSpeedPxPerSecond = 24;
+let lastChaseFrameTime = 0;
+
+function updateChaseSpeed() {
+  const { width } = getSceneRect();
+  const startX = clampNumber(width * 0.12, 24, 56);
+  const targetX = width / 2;
+  const travelDistance = Math.max(1, Math.abs(targetX - startX));
+
+  chaseSpeedPxPerSecond = clampNumber(travelDistance / CHASE_DURATION_SECONDS, 16, 90);
+}
+
 function createFlames() {
   const container = document.getElementById('fireContainer');
   container.innerHTML = '';
   const colors = ['#ff4400', '#ff6600', '#ff8800', '#ffaa00', '#ffcc00', '#ff2200'];
 
-  for (let i = 0; i < 50; i++) {
+  const { width } = getSceneRect();
+  const scale = getSceneScale();
+  const flameCount = Math.round(clampNumber(width / 14, 24, 50));
+
+  for (let i = 0; i < flameCount; i++) {
     const flame = document.createElement('div');
     flame.className = 'flame';
 
-    const w = 25 + Math.random() * 80;
-    const h = 60 + Math.random() * 150;
+    const w = (20 + Math.random() * 78) * scale;
+    const h = (48 + Math.random() * 145) * scale;
     flame.style.width = `${w}px`;
     flame.style.height = `${h}px`;
     flame.style.left = `${Math.random() * 100}%`;
@@ -221,7 +285,9 @@ function createFlames() {
     container.appendChild(flame);
   }
 
-  for (let i = 0; i < 30; i++) {
+  const emberCount = Math.round(clampNumber(width / 18, 14, 30));
+
+  for (let i = 0; i < emberCount; i++) {
     const ember = document.createElement('div');
     ember.className = 'ember';
     ember.style.cssText = `position:absolute;width:${4 + Math.random() * 8}px;height:${4 + Math.random() * 8}px;background:${colors[Math.floor(Math.random() * 3)]};border-radius:50%;left:${Math.random() * 100}%;bottom:${Math.random() * 50}%;opacity:${0.6 + Math.random() * 0.4};`;
@@ -237,22 +303,27 @@ function startFireBreath() {
   const container = document.getElementById('fireBreathContainer');
 
   fireBreathInterval = setInterval(() => {
+    const { width } = getSceneRect();
+    const breathScale = clampNumber(width / 430, 0.55, 1);
+    const largeBreathWidth = 220 * breathScale;
+    const mediumBreathWidth = 180 * breathScale;
+    const smallBreathWidth = 140 * breathScale;
     app.classList.add('screen-shake');
     setTimeout(() => app.classList.remove('screen-shake'), 300);
 
     const fb1 = document.createElement('div');
     fb1.className = 'fire-breath';
-    fb1.style.cssText = `width:220px;height:75px;background:radial-gradient(ellipse 100% 50% at left, #ff2200 0%, #ff4400 15%, #ff8800 35%, #ffaa00 55%, #ffcc00 75%, transparent 95%);border-radius:0 80% 80% 0;top:${0 + Math.random() * 8}px;left:0;transform-origin:left center;filter:drop-shadow(0 0 30px rgba(255,100,0,0.9)) drop-shadow(0 0 60px rgba(255,50,0,0.6));`;
+    fb1.style.cssText = `width:${largeBreathWidth}px;height:${75 * breathScale}px;background:radial-gradient(ellipse 100% 50% at left, #ff2200 0%, #ff4400 15%, #ff8800 35%, #ffaa00 55%, #ffcc00 75%, transparent 95%);border-radius:0 80% 80% 0;top:${0 + Math.random() * 8}px;left:0;transform-origin:left center;filter:drop-shadow(0 0 30px rgba(255,100,0,0.9)) drop-shadow(0 0 60px rgba(255,50,0,0.6));`;
     container.appendChild(fb1);
 
     const fb2 = document.createElement('div');
     fb2.className = 'fire-breath';
-    fb2.style.cssText = `width:180px;height:55px;background:radial-gradient(ellipse 90% 45% at left, #ffaa00 0%, #ff8800 25%, #ff6600 50%, #ff4400 75%, transparent 90%);border-radius:0 70% 70% 0;top:${12 + Math.random() * 10}px;left:0;transform-origin:left center;opacity:0.8;filter:drop-shadow(0 0 20px rgba(255,150,0,0.7));`;
+    fb2.style.cssText = `width:${mediumBreathWidth}px;height:${55 * breathScale}px;background:radial-gradient(ellipse 90% 45% at left, #ffaa00 0%, #ff8800 25%, #ff6600 50%, #ff4400 75%, transparent 90%);border-radius:0 70% 70% 0;top:${12 + Math.random() * 10}px;left:0;transform-origin:left center;opacity:0.8;filter:drop-shadow(0 0 20px rgba(255,150,0,0.7));`;
     container.appendChild(fb2);
 
     const fb3 = document.createElement('div');
     fb3.className = 'fire-breath';
-    fb3.style.cssText = `width:140px;height:35px;background:radial-gradient(ellipse 85% 40% at left, #ffff00 0%, #ffff99 20%, #ffaa00 50%, #ff6600 80%, transparent 95%);border-radius:0 60% 60% 0;top:${15 + Math.random() * 6}px;left:0;transform-origin:left center;opacity:0.9;filter:drop-shadow(0 0 40px rgba(255,200,0,0.8));`;
+    fb3.style.cssText = `width:${smallBreathWidth}px;height:${35 * breathScale}px;background:radial-gradient(ellipse 85% 40% at left, #ffff00 0%, #ffff99 20%, #ffaa00 50%, #ff6600 80%, transparent 95%);border-radius:0 60% 60% 0;top:${15 + Math.random() * 6}px;left:0;transform-origin:left center;opacity:0.9;filter:drop-shadow(0 0 40px rgba(255,200,0,0.8));`;
     container.appendChild(fb3);
 
     for (let i = 0; i < 8; i++) {
@@ -276,7 +347,11 @@ function initChase() {
   playMusic(step3Music, { loop: true, restart: true });
 
   chaseComplete = false;
-  monsterX = 50;
+  lastChaseFrameTime = 0;
+  updateChaseSpeed();
+
+  const { width } = getSceneRect();
+  monsterX = clampNumber(width * 0.12, 24, 56);
 
   const m = document.getElementById('monsterChase');
   m.style.left = `${monsterX}px`;
@@ -288,7 +363,9 @@ function initChase() {
   app.classList.add('wand-cursor');
 
   const step3El = document.getElementById('step3');
+  step3El.onpointermove = handleChase;
   step3El.onmousemove = handleChase;
+  step3El.onclick = handleChase;
   step3El.ontouchmove = (e) => {
     e.preventDefault();
     handleChase(e.touches[0]);
@@ -301,15 +378,24 @@ function handleChase() {
   const m = document.getElementById('monsterChase');
   const rect = app.getBoundingClientRect();
   const caveCenter = rect.width / 2;
+  const threshold = clampNumber(rect.width * 0.018, 8, 18);
+  const now = performance.now();
+  const rawDt = lastChaseFrameTime ? (now - lastChaseFrameTime) / 1000 : 1 / 60;
+  const dt = clampNumber(rawDt, 1 / 120, CHASE_MAX_DT_SECONDS);
+  const step = Math.max(CHASE_MIN_STEP_PX, chaseSpeedPxPerSecond * dt);
   const distToCave = Math.abs(monsterX - caveCenter);
 
-  if (distToCave > 10) {
-    monsterX += monsterX < caveCenter ? 2 : -2;
+  lastChaseFrameTime = now;
+
+  if (distToCave > threshold) {
+    const direction = monsterX < caveCenter ? 1 : -1;
+    monsterX += direction * Math.min(step, Math.max(0, distToCave - threshold));
+    monsterX = clampNumber(monsterX, 8, Math.max(8, rect.width - 80));
     m.style.left = `${monsterX}px`;
     m.style.transform = monsterX < caveCenter ? 'scaleX(1)' : 'scaleX(-1)';
   }
 
-  if (distToCave <= 10) {
+  if (Math.abs(monsterX - caveCenter) <= threshold) {
     chaseComplete = true;
     m.style.transition = 'opacity 0.8s, transform 0.8s';
     m.style.opacity = '0';
