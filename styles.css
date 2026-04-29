@@ -464,3 +464,308 @@ body {
     padding: 24px 18px;
   }
 }
+
+/* ===== RESPONSIVE OVERRIDES =====
+   Các rule dưới đây chủ động ghi đè một số width/bottom/font-size inline trong HTML
+   để scene giữ đúng tỷ lệ trên mobile, tablet, desktop, màn hình ngang và màn hình thấp. */
+:root {
+  --vh: 1vh;
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-right: env(safe-area-inset-right, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-left: env(safe-area-inset-left, 0px);
+  --scene-pad: clamp(12px, 3vw, 32px);
+  --ground-h: clamp(72px, 13svh, 128px);
+  --cave-w: clamp(190px, 42vmin, 320px);
+  --cave-h: calc(var(--cave-w) * 0.875);
+  --monster-intro-w: clamp(150px, 38vmin, 260px);
+  --monster-chase-w: clamp(52px, 12vmin, 86px);
+  --monster-final-w: clamp(118px, 31vmin, 200px);
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  width: 100%;
+  min-height: 100%;
+  height: 100dvh;
+}
+
+body {
+  overscroll-behavior: none;
+}
+
+#app {
+  width: 100vw;
+  height: calc(var(--vh) * 100);
+  min-height: 100svh;
+  isolation: isolate;
+  touch-action: none;
+}
+
+#step1,
+#step2,
+#step3,
+#step4,
+#step5 {
+  min-height: calc(var(--vh) * 100);
+  padding: calc(var(--safe-top) + var(--scene-pad)) calc(var(--safe-right) + var(--scene-pad)) calc(var(--safe-bottom) + var(--scene-pad)) calc(var(--safe-left) + var(--scene-pad));
+}
+
+#step1 .danger-text {
+  width: min(94vw, 920px);
+  font-size: clamp(2rem, 9vmin, 4.5rem) !important;
+  line-height: 1.05;
+  overflow-wrap: anywhere;
+}
+
+#step1 .danger-text > div {
+  font-size: clamp(1.05rem, 4.2vmin, 1.875rem) !important;
+  line-height: 1.2;
+}
+
+.fire-container {
+  height: clamp(42%, 64svh, 72%) !important;
+}
+
+#monsterIntro {
+  width: var(--monster-intro-w);
+  max-width: 82vw;
+  transform: translateY(clamp(-26px, -4svh, 0px));
+}
+
+#monsterSvgIntro {
+  width: 100% !important;
+  height: auto !important;
+  display: block;
+}
+
+#fireBreathContainer {
+  top: 26% !important;
+  right: clamp(-155px, -33vw, -74px) !important;
+  width: clamp(120px, 37vw, 220px) !important;
+  height: clamp(44px, 14vw, 86px) !important;
+}
+
+#monsterName {
+  left: 50%;
+  right: auto;
+  width: min(94vw, 920px);
+  bottom: calc(var(--safe-bottom) + clamp(14px, 4svh, 64px)) !important;
+  transform: translateX(-50%);
+  padding-inline: 10px;
+  text-align: center;
+  font-size: clamp(1rem, 4.4vmin, 1.875rem) !important;
+  line-height: 1.25;
+}
+
+.ground {
+  height: var(--ground-h) !important;
+}
+
+#caveChasestep,
+#cave,
+#mainCave {
+  width: var(--cave-w) !important;
+  height: var(--cave-h) !important;
+  bottom: calc(var(--ground-h) - clamp(8px, 2svh, 20px)) !important;
+}
+
+#caveChasestep svg,
+#cave svg,
+#mainCave svg {
+  width: 100% !important;
+  height: 100% !important;
+  display: block;
+}
+
+#chaseHint {
+  top: calc(var(--safe-top) + clamp(12px, 4svh, 34px)) !important;
+  width: min(94vw, 860px);
+  padding-inline: 10px;
+  text-align: center;
+  font-size: clamp(0.98rem, 4.2vmin, 1.5rem) !important;
+  line-height: 1.25;
+}
+
+#monsterChase {
+  width: var(--monster-chase-w) !important;
+  height: auto !important;
+  bottom: calc(var(--ground-h) + clamp(8px, 3svh, 36px)) !important;
+}
+
+#monsterChase svg {
+  width: 100% !important;
+  height: auto !important;
+  display: block;
+}
+
+#scrollTextContainer {
+  top: clamp(38%, 48svh, 54%) !important;
+}
+
+#scrollText {
+  font-size: clamp(1.25rem, 5vmin, 2.25rem) !important;
+  line-height: 1.2;
+  padding-inline: 1rem;
+}
+
+#clouds .cloud,
+#clouds5 .cloud {
+  transform-origin: center;
+}
+
+#monsterFinal {
+  width: var(--monster-final-w) !important;
+  height: auto !important;
+  bottom: calc(var(--ground-h) + clamp(12px, 4svh, 48px)) !important;
+}
+
+#monsterFinal svg {
+  width: 100% !important;
+  height: auto !important;
+  display: block;
+}
+
+#congratsMsg {
+  top: calc(var(--safe-top) + clamp(22px, 9svh, 120px)) !important;
+  padding-inline: clamp(12px, 4vw, 48px) !important;
+}
+
+#congratsText {
+  max-width: min(94vw, 920px);
+  margin-inline: auto;
+  font-size: clamp(1rem, 4.2vmin, 1.875rem) !important;
+  line-height: 1.35 !important;
+  overflow-wrap: anywhere;
+}
+
+#congratsMsg .congrats-text:last-child {
+  font-size: clamp(2.25rem, 10vmin, 3rem) !important;
+}
+
+.monster-rays {
+  width: clamp(145px, 44vmin, 280px) !important;
+  height: clamp(145px, 44vmin, 280px) !important;
+  bottom: calc(var(--ground-h) + clamp(0px, 2svh, 28px)) !important;
+}
+
+.floating-heart {
+  font-size: clamp(72px, 25vmin, 200px) !important;
+  bottom: calc(var(--ground-h) + clamp(12px, 5svh, 120px)) !important;
+}
+
+#restartBtn {
+  right: calc(var(--safe-right) + clamp(12px, 3vw, 24px)) !important;
+  bottom: calc(var(--safe-bottom) + clamp(12px, 2.5svh, 24px)) !important;
+  max-width: calc(100vw - 32px);
+  padding: clamp(8px, 2vmin, 12px) clamp(12px, 3vmin, 18px) !important;
+  font-size: clamp(0.78rem, 3.2vmin, 1rem) !important;
+  white-space: normal;
+}
+
+.flower-fall {
+  font-size: clamp(16px, 4.2vmin, 36px) !important;
+}
+
+@media (max-width: 640px) {
+  :root {
+    --ground-h: clamp(64px, 12svh, 96px);
+    --cave-w: clamp(180px, 62vw, 270px);
+    --monster-intro-w: clamp(145px, 62vw, 230px);
+    --monster-final-w: clamp(112px, 46vw, 170px);
+  }
+
+  .start-overlay {
+    padding: calc(var(--safe-top) + 16px) calc(var(--safe-right) + 16px) calc(var(--safe-bottom) + 16px) calc(var(--safe-left) + 16px);
+  }
+
+  .start-card {
+    width: min(94vw, 430px);
+    max-height: calc(var(--vh) * 92);
+    overflow-y: auto;
+  }
+
+  #fireBreathContainer {
+    right: clamp(-104px, -26vw, -68px) !important;
+  }
+
+  #clouds .cloud,
+  #clouds5 .cloud {
+    transform: scale(0.72);
+  }
+}
+
+@media (orientation: landscape) and (max-height: 520px) {
+  :root {
+    --scene-pad: clamp(8px, 2vw, 18px);
+    --ground-h: clamp(46px, 14svh, 70px);
+    --cave-w: clamp(145px, 42svh, 230px);
+    --monster-intro-w: clamp(120px, 42svh, 190px);
+    --monster-final-w: clamp(96px, 34svh, 150px);
+    --monster-chase-w: clamp(44px, 13svh, 66px);
+  }
+
+  #monsterIntro {
+    transform: translateY(-3svh);
+  }
+
+  #monsterName {
+    bottom: calc(var(--safe-bottom) + 8px) !important;
+    font-size: clamp(0.82rem, 3.8svh, 1.2rem) !important;
+  }
+
+  #chaseHint {
+    top: calc(var(--safe-top) + 8px) !important;
+    font-size: clamp(0.82rem, 4svh, 1.2rem) !important;
+  }
+
+  #congratsMsg {
+    top: calc(var(--safe-top) + 10px) !important;
+  }
+
+  #congratsText {
+    font-size: clamp(0.86rem, 4svh, 1.25rem) !important;
+  }
+
+  #clouds .cloud,
+  #clouds5 .cloud {
+    transform: scale(0.62);
+  }
+
+  .fire-container {
+    height: 62% !important;
+  }
+}
+
+@media (min-height: 900px) and (min-width: 700px) {
+  :root {
+    --ground-h: clamp(96px, 12svh, 140px);
+    --cave-w: clamp(280px, 34vmin, 360px);
+    --monster-final-w: clamp(180px, 25vmin, 230px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .screen-shake,
+  .danger-text,
+  .monster-idle,
+  .celebrate-letter,
+  .monster-celebrate,
+  .monster-rays,
+  .cloud,
+  .scroll-text,
+  .flame,
+  .fire-breath,
+  .flower-fall,
+  .confetti,
+  .sparkle,
+  .heart-float {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
